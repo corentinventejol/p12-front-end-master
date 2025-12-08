@@ -61,67 +61,72 @@ function EmployeeForm() {
   const departments = ['Sales', 'Marketing', 'Engineering', 'Human Resources', 'Legal']
 
   return (
-    <form className="employee-form" onSubmit={handleSubmit}>
-      <h1>Create Employee</h1>
+    <form className="employee-form dark:bg-slate-800 dark:text-blue-100" onSubmit={handleSubmit}>
+      <h1 className="dark:text-blue-100">Create Employee</h1>
       
       <div className="form-content">
         <div className="form-left">
           <div className="form-group">
-            <label htmlFor="firstName">First Name</label>
+            <label htmlFor="firstName" className="dark:text-blue-200">First Name</label>
             <input
               type="text"
               id="firstName"
               name="firstName"
               value={formData.firstName}
               onChange={handleChange}
+              className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600"
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="lastName">Last Name</label>
+            <label htmlFor="lastName" className="dark:text-blue-200">Last Name</label>
             <input
               type="text"
               id="lastName"
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
+              className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600"
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="dateOfBirth">Date of Birth</label>
+            <label htmlFor="dateOfBirth" className="dark:text-blue-200">Date of Birth</label>
             <input
               type="date"
               id="dateOfBirth"
               name="dateOfBirth"
               value={formData.dateOfBirth}
               onChange={handleChange}
+              className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600"
               max={new Date().toISOString().split('T')[0]}
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="startDate">Start Date</label>
+            <label htmlFor="startDate" className="dark:text-blue-200">Start Date</label>
             <input
               type="date"
               id="startDate"
               name="startDate"
               value={formData.startDate}
               onChange={handleChange}
+              className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600"
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="department">Department</label>
+            <label htmlFor="department" className="dark:text-blue-200">Department</label>
             <select
               id="department"
               name="department"
               value={formData.department}
               onChange={handleChange}
+              className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600"
               required
             >
               {departments.map(dept => (
@@ -131,40 +136,43 @@ function EmployeeForm() {
           </div>
         </div>
 
-        <fieldset className="address-fieldset">
-          <legend>Address</legend>
+        <fieldset className="address-fieldset dark:border-slate-600">
+          <legend className="dark:text-blue-200">Address</legend>
           
           <div className="form-group">
-            <label htmlFor="street">Street</label>
+            <label htmlFor="street" className="dark:text-blue-200">Street</label>
             <input
               type="text"
               id="street"
               name="street"
               value={formData.street}
               onChange={handleChange}
+              className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600"
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="city">City</label>
+            <label htmlFor="city" className="dark:text-blue-200">City</label>
             <input
               type="text"
               id="city"
               name="city"
               value={formData.city}
               onChange={handleChange}
+              className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600"
               required
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="state">State</label>
+            <label htmlFor="state" className="dark:text-blue-200">State</label>
             <select
               id="state"
               name="state"
               value={formData.state}
               onChange={handleChange}
+              className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600"
               required
             >
               {states.map(state => (
@@ -174,20 +182,21 @@ function EmployeeForm() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="zipCode">Zip Code</label>
+            <label htmlFor="zipCode" className="dark:text-blue-200">Zip Code</label>
             <input
               type="number"
               id="zipCode"
               name="zipCode"
               value={formData.zipCode}
               onChange={handleChange}
+              className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600"
               required
             />
           </div>
         </fieldset>
       </div>
       
-      <button type="submit" className="submit-button">Save</button>
+      <button type="submit" className="submit-button dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-blue-50">Save</button>
     </form>
   )
 }

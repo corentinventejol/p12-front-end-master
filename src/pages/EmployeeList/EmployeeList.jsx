@@ -46,14 +46,14 @@ function EmployeeList() {
   }
 
   return (
-    <div className="employee-list-page">
-      <h1>Current Employees</h1>
+    <div className="employee-list-page dark:bg-slate-900">
+      <h1 className="dark:text-blue-100">Current Employees</h1>
       
-      <div className="table-controls">
+      <div className="table-controls dark:text-blue-100">
         <div className="entries-control">
           <label>
             Show 
-            <select value={entriesPerPage} onChange={handleEntriesChange}>
+            <select value={entriesPerPage} onChange={handleEntriesChange} className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600">
               <option value={10}>10</option>
               <option value={25}>25</option>
               <option value={50}>50</option>
@@ -70,13 +70,14 @@ function EmployeeList() {
               type="text" 
               value={search} 
               onChange={handleSearchChange}
+              className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600"
             />
           </label>
         </div>
       </div>
 
       <div className="table-wrapper">
-        <table className="employee-table">
+        <table className="employee-table dark:bg-slate-800 dark:text-blue-100">
           <thead>
             <tr>
               <th>First Name</th>
@@ -114,14 +115,14 @@ function EmployeeList() {
         </table>
       </div>
 
-      <div className="table-footer">
+      <div className="table-footer dark:text-blue-100">
         <div className="showing-info">
           Showing {Math.min(endIndex, filteredEmployees.length)} of {filteredEmployees.length} entries
         </div>
         
         <div className="pagination">
-          <button onClick={handlePrevious} disabled={currentPage === 1}>Previous</button>
-          <button onClick={handleNext} disabled={currentPage === totalPages || filteredEmployees.length === 0}>Next</button>
+          <button onClick={handlePrevious} disabled={currentPage === 1} className="dark:bg-slate-700 dark:text-blue-100 dark:hover:bg-slate-600">Previous</button>
+          <button onClick={handleNext} disabled={currentPage === totalPages || filteredEmployees.length === 0} className="dark:bg-slate-700 dark:text-blue-100 dark:hover:bg-slate-600">Next</button>
         </div>
       </div>
     </div>
