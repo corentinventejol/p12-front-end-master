@@ -19,13 +19,64 @@ function EmployeeForm() {
     department: 'Sales'
   })
 
+
+
+
+
+  // Calculer la date maximum pour avoir au moins 16 ans
+  const getMaxBirthDate = () => {
+    const today = new Date()
+    const maxDate = new Date(today.getFullYear() - 16, today.getMonth(), today.getDate())
+    return maxDate.toISOString().split('T')[0]
+  }
+
+  // Valider la date de naissance
+  const validateBirthDate = (dateValue) => {
+    if (!dateValue) return ''
+    
+    const selectedDate = new Date(dateValue)
+    const today = new Date()
+    const minDate = new Date(today.getFullYear() - 16, today.getMonth(), today.getDate())
+    
+    // Vérifier si la date est valide (pas de 31 février par exemple)
+    if (isNaN(selectedDate.getTime()) || selectedDate.toISOString().split('T')[0] !== dateValue) {
+      return 'Veuillez saisir une date valide'
+    }
+    
+    // Vérifier si la date est dans le futur
+    if (selectedDate > today) {
+      return 'La date de naissance ne peut pas être dans le futur'
+    }
+    
+    // Vérifier si la personne a moins de 16 ans
+    if (selectedDate > minDate) {
+      return 'L\'employé doit avoir au moins 16 ans'
+    }
+    
+    return ''
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target
+    
+    // Limiter le zipCode à 5 caractères maximum
+    if (name === 'zipCode' && value.length > 5) {
+      return
+    }
+    
     setFormData(prev => ({
       ...prev,
       [name]: value
     }))
+    
+    // Valider la date de naissance
+    if (name === 'dateOfBirth') {
+      const errorMessage = validateBirthDate(value)
+      e.target.setCustomValidity(errorMessage)
+    }
   }
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -39,9 +90,9 @@ function EmployeeForm() {
       startDate: '',
       street: '',
       city: '',
-      state: '',
+      state: 'Alabama',
       zipCode: '',
-      department: ''
+      department: 'Sales'
     })
   }
 
@@ -100,8 +151,12 @@ function EmployeeForm() {
               name="dateOfBirth"
               value={formData.dateOfBirth}
               onChange={handleChange}
+              onInvalid={(e) => {
+                const errorMessage = validateBirthDate(e.target.value)
+                e.target.setCustomValidity(errorMessage || 'Veillez à bien compléter ce champ.')
+              }}
               className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600"
-              max={new Date().toISOString().split('T')[0]}
+              max={getMaxBirthDate()}
               required
             />
           </div>
@@ -190,6 +245,7 @@ function EmployeeForm() {
               value={formData.zipCode}
               onChange={handleChange}
               className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600"
+              placeholder="Max 5 chiffres"
               required
             />
           </div>
