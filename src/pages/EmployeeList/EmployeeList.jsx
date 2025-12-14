@@ -13,7 +13,11 @@ function EmployeeList() {
     emp.lastName.toLowerCase().includes(search.toLowerCase()) ||
     emp.department.toLowerCase().includes(search.toLowerCase()) ||
     emp.city.toLowerCase().includes(search.toLowerCase()) ||
-    emp.state.toLowerCase().includes(search.toLowerCase())
+    emp.state.toLowerCase().includes(search.toLowerCase()) ||
+    emp.street.toLowerCase().includes(search.toLowerCase()) ||
+    emp.zipCode.toString().includes(search) ||
+    emp.dateOfBirth.includes(search) ||
+    emp.startDate.includes(search)
   )
 
   // Calcul de la pagination

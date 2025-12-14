@@ -19,9 +19,8 @@ function EmployeeForm() {
     department: 'Sales'
   })
 
-
-
-
+  const [showModal, setShowModal] = useState(false)
+  const [savedEmployee, setSavedEmployee] = useState({})
 
   // Calculer la date maximum pour avoir au moins 16 ans
   const getMaxBirthDate = () => {
@@ -59,9 +58,16 @@ function EmployeeForm() {
   const handleChange = (e) => {
     const { name, value } = e.target
     
-    // Limiter le zipCode à 5 caractères maximum
-    if (name === 'zipCode' && value.length > 5) {
-      return
+    // Limiter le zipCode à 5 chiffres uniquement
+    if (name === 'zipCode') {
+      // Vérifier que la valeur ne contient que des chiffres
+      if (!/^\d*$/.test(value)) {
+        return
+      }
+      // Limiter à 5 caractères maximum
+      if (value.length > 5) {
+        return
+      }
     }
     
     setFormData(prev => ({
@@ -82,6 +88,12 @@ function EmployeeForm() {
     e.preventDefault()
     addEmployee(formData)
     
+    // Sauvegarder les données avant de réinitialiser
+    setSavedEmployee(formData)
+    
+    // Afficher le modal de confirmation
+    setShowModal(true)
+    
     // Réinitialiser le formulaire
     setFormData({
       firstName: '',
@@ -94,6 +106,10 @@ function EmployeeForm() {
       zipCode: '',
       department: 'Sales'
     })
+  }
+
+  const closeModal = () => {
+    setShowModal(false)
   }
 
   const states = [
@@ -112,8 +128,9 @@ function EmployeeForm() {
   const departments = ['Sales', 'Marketing', 'Engineering', 'Human Resources', 'Legal']
 
   return (
-    <form className="employee-form dark:bg-slate-800 dark:text-blue-100" onSubmit={handleSubmit}>
-      <h1 className="dark:text-blue-100">Create Employee</h1>
+    <>
+      <form className="employee-form dark:bg-slate-800 dark:text-blue-100" onSubmit={handleSubmit}>
+        <h1 className="dark:text-blue-100">Create Employee</h1>
       
       <div className="form-content">
         <div className="form-left">
@@ -254,6 +271,22 @@ function EmployeeForm() {
       
       <button type="submit" className="submit-button dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-blue-50">Save</button>
     </form>
+
+    {/* Modal de confirmation */}
+    {showModal && (
+      <div className="modal-overlay" onClick={closeModal}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-header">
+            <h2>Employé créé avec succès !</h2>
+            <button className="modal-close" onClick={closeModal}>&times;</button>
+          </div>
+          <div className="modal-body">
+            <p>L'employé <strong>{savedEmployee.firstName} {savedEmployee.lastName}</strong> a été ajouté avec succès.</p>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   )
 }
 
