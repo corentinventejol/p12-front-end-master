@@ -36,6 +36,104 @@
   font-size: 0.9rem;
 }
 
+/* Styles pour le label avec tooltip */
+.label-with-tooltip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Container du tooltip */
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Icône d'information */
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+  font-weight: bold;
+  font-style: normal;
+  font-family: serif;
+  cursor: pointer;
+  background-color: #007acc;
+  color: white;
+  border-radius: 50%;
+  transition: all 0.2s;
+  user-select: none;
+  line-height: 1;
+  text-align: center;
+}
+
+.info-icon:hover {
+  background-color: #005a9e;
+  transform: scale(1.1);
+}
+
+/* Mode sombre pour l'icône */
+.dark .info-icon {
+  background-color: #3b82f6;
+}
+
+.dark .info-icon:hover {
+  background-color: #2563eb;
+}
+
+/* Bulle tooltip */
+.tooltip {
+  visibility: hidden;
+  opacity: 0;
+  width: 280px;
+  background-color: #333;
+  color: white;
+  text-align: left;
+  border-radius: 8px;
+  padding: 12px;
+  position: absolute;
+  z-index: 1000;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -140px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+/* Flèche du tooltip */
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+/* Affichage au hover */
+.tooltip-container:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Styles pour le mode sombre */
+.dark .tooltip {
+  background-color: #1e293b;
+  color: #e2e8f0;
+  border: 1px solid #334155;
+}
+
+.dark .tooltip::after {
+  border-color: #1e293b transparent transparent transparent;
+}
+
 .form-group input,
 .form-group select {
   padding: 0.5rem;

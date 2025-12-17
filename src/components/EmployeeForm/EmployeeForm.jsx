@@ -7,7 +7,7 @@ function EmployeeForm() {
   const navigate = useNavigate()
   const { addEmployee } = useEmployees()
   
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     firstName: '',
     lastName: '',
     dateOfBirth: '',
@@ -17,7 +17,9 @@ function EmployeeForm() {
     state: 'Alabama',
     zipCode: '',
     department: 'Sales'
-  })
+  }
+
+  const [formData, setFormData] = useState(initialFormData)
 
   const [showModal, setShowModal] = useState(false)
   const [savedEmployee, setSavedEmployee] = useState({})
@@ -35,7 +37,7 @@ function EmployeeForm() {
     
     const selectedDate = new Date(dateValue)
     const today = new Date()
-    const minDate = new Date(today.getFullYear() - 16, today.getMonth(), today.getDate())
+    const maxDate = new Date(today.getFullYear() - 16, today.getMonth(), today.getDate())
     
     // Vérifier si la date est valide (pas de 31 février par exemple)
     if (isNaN(selectedDate.getTime()) || selectedDate.toISOString().split('T')[0] !== dateValue) {
@@ -48,26 +50,29 @@ function EmployeeForm() {
     }
     
     // Vérifier si la personne a moins de 16 ans
-    if (selectedDate > minDate) {
+    if (selectedDate > maxDate) {
       return 'L\'employé doit avoir au moins 16 ans'
     }
     
     return ''
   }
 
+  // Fonction pour bloquer les lettres dans zipCode
+  const handleKeyPress = (e) => {
+    if (e.target.name === 'zipCode') {
+      // Bloquer tout ce qui n'est pas un chiffre
+      if (!/[0-9]/.test(e.key) && !['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) {
+        e.preventDefault()
+      }
+    }
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target
     
-    // Limiter le zipCode à 5 chiffres uniquement
-    if (name === 'zipCode') {
-      // Vérifier que la valeur ne contient que des chiffres
-      if (!/^\d*$/.test(value)) {
-        return
-      }
-      // Limiter à 5 caractères maximum
-      if (value.length > 5) {
-        return
-      }
+    // Limiter le zipCode aux chiffres uniquement
+    if (name === 'zipCode' && !/^\d*$/.test(value)) {
+      return
     }
     
     setFormData(prev => ({
@@ -82,8 +87,6 @@ function EmployeeForm() {
     }
   }
 
-
-
   const handleSubmit = (e) => {
     e.preventDefault()
     addEmployee(formData)
@@ -95,17 +98,7 @@ function EmployeeForm() {
     setShowModal(true)
     
     // Réinitialiser le formulaire
-    setFormData({
-      firstName: '',
-      lastName: '',
-      dateOfBirth: '',
-      startDate: '',
-      street: '',
-      city: '',
-      state: 'Alabama',
-      zipCode: '',
-      department: 'Sales'
-    })
+    setFormData(initialFormData)
   }
 
   const closeModal = () => {
@@ -161,7 +154,18 @@ function EmployeeForm() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="dateOfBirth" className="dark:text-blue-200">Date of Birth</label>
+            <label htmlFor="dateOfBirth" className="dark:text-blue-200 label-with-tooltip">
+              Date of Birth
+              <div className="tooltip-container">
+                <span className="info-icon">i</span>
+                <div className="tooltip">
+                  <strong>Contraintes d'âge :</strong><br/>
+                  • L'employé doit avoir au moins 16 ans<br/>
+                  • La date ne peut pas être dans le futur<br/>
+                  • Seules les dates valides sont acceptées
+                </div>
+              </div>
+            </label>
             <input
               type="date"
               id="dateOfBirth"
@@ -256,11 +260,13 @@ function EmployeeForm() {
           <div className="form-group">
             <label htmlFor="zipCode" className="dark:text-blue-200">Zip Code</label>
             <input
-              type="number"
+              type="text"
               id="zipCode"
               name="zipCode"
               value={formData.zipCode}
               onChange={handleChange}
+              onKeyDown={handleKeyPress}
+              maxLength="5"
               className="dark:bg-slate-700 dark:text-blue-100 dark:border-slate-600"
               placeholder="Max 5 chiffres"
               required

@@ -7,24 +7,50 @@ function EmployeeList() {
   const [search, setSearch] = useState('')
   const [entriesPerPage, setEntriesPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(1)
+  const [sortField, setSortField] = useState('')
+  const [sortDirection, setSortDirection] = useState('asc') // 'asc' ou 'desc'
 
-  const filteredEmployees = employees.filter(emp => 
-    emp.firstName.toLowerCase().includes(search.toLowerCase()) ||
-    emp.lastName.toLowerCase().includes(search.toLowerCase()) ||
-    emp.department.toLowerCase().includes(search.toLowerCase()) ||
-    emp.city.toLowerCase().includes(search.toLowerCase()) ||
-    emp.state.toLowerCase().includes(search.toLowerCase()) ||
-    emp.street.toLowerCase().includes(search.toLowerCase()) ||
-    emp.zipCode.toString().includes(search) ||
-    emp.dateOfBirth.includes(search) ||
-    emp.startDate.includes(search)
-  )
+  const filteredAndSortedEmployees = employees
+    .filter(emp => 
+      emp.firstName.toLowerCase().includes(search.toLowerCase()) ||
+      emp.lastName.toLowerCase().includes(search.toLowerCase()) ||
+      emp.department.toLowerCase().includes(search.toLowerCase()) ||
+      emp.city.toLowerCase().includes(search.toLowerCase()) ||
+      emp.state.toLowerCase().includes(search.toLowerCase()) ||
+      emp.street.toLowerCase().includes(search.toLowerCase()) ||
+      emp.zipCode.toString().includes(search) ||
+      emp.dateOfBirth.includes(search) ||
+      emp.startDate.includes(search)
+    )
+    .sort((a, b) => {
+      if (!sortField) return 0
+      
+      let aValue = a[sortField]
+      let bValue = b[sortField]
+      
+      // Conversion pour les dates
+      if (sortField === 'dateOfBirth' || sortField === 'startDate') {
+        aValue = new Date(aValue)
+        bValue = new Date(bValue)
+      }
+      
+      // Conversion pour les nombres
+      if (sortField === 'zipCode') {
+        aValue = parseInt(aValue) || 0
+        bValue = parseInt(bValue) || 0
+      }
+      
+      // Comparaison
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1
+      return 0
+    })
 
   // Calcul de la pagination
-  const totalPages = Math.ceil(filteredEmployees.length / entriesPerPage)
+  const totalPages = Math.ceil(filteredAndSortedEmployees.length / entriesPerPage)
   const startIndex = (currentPage - 1) * entriesPerPage
   const endIndex = startIndex + entriesPerPage
-  const currentEmployees = filteredEmployees.slice(startIndex, endIndex)
+  const currentEmployees = filteredAndSortedEmployees.slice(startIndex, endIndex)
 
   // Réinitialiser à la page 1 quand on change le filtre
   const handleSearchChange = (e) => {
@@ -47,6 +73,25 @@ function EmployeeList() {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1)
     }
+  }
+
+  const handleSort = (field) => {
+    if (sortField === field) {
+      // Si on clique sur la même colonne, inverser la direction
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
+    } else {
+      // Nouvelle colonne, commencer par ordre croissant
+      setSortField(field)
+      setSortDirection('asc')
+    }
+    setCurrentPage(1) // Retour à la première page
+  }
+
+  const getSortIcon = (field) => {
+    if (sortField !== field) {
+      return '↕' // Flèches neutres quand pas de tri
+    }
+    return sortDirection === 'asc' ? '↑' : '↓'
   }
 
   return (
@@ -84,15 +129,33 @@ function EmployeeList() {
         <table className="employee-table dark:bg-slate-800 dark:text-blue-100">
           <thead>
             <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Start Date</th>
-              <th>Department</th>
-              <th>Date of Birth</th>
-              <th>Street</th>
-              <th>City</th>
-              <th>State</th>
-              <th>Zip Code</th>
+              <th className="sortable" onClick={() => handleSort('firstName')}>
+                First Name <span className="sort-icon">{getSortIcon('firstName')}</span>
+              </th>
+              <th className="sortable" onClick={() => handleSort('lastName')}>
+                Last Name <span className="sort-icon">{getSortIcon('lastName')}</span>
+              </th>
+              <th className="sortable" onClick={() => handleSort('startDate')}>
+                Start Date <span className="sort-icon">{getSortIcon('startDate')}</span>
+              </th>
+              <th className="sortable" onClick={() => handleSort('department')}>
+                Department <span className="sort-icon">{getSortIcon('department')}</span>
+              </th>
+              <th className="sortable" onClick={() => handleSort('dateOfBirth')}>
+                Date of Birth <span className="sort-icon">{getSortIcon('dateOfBirth')}</span>
+              </th>
+              <th className="sortable" onClick={() => handleSort('street')}>
+                Street <span className="sort-icon">{getSortIcon('street')}</span>
+              </th>
+              <th className="sortable" onClick={() => handleSort('city')}>
+                City <span className="sort-icon">{getSortIcon('city')}</span>
+              </th>
+              <th className="sortable" onClick={() => handleSort('state')}>
+                State <span className="sort-icon">{getSortIcon('state')}</span>
+              </th>
+              <th className="sortable" onClick={() => handleSort('zipCode')}>
+                Zip Code <span className="sort-icon">{getSortIcon('zipCode')}</span>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -121,12 +184,12 @@ function EmployeeList() {
 
       <div className="table-footer dark:text-blue-100">
         <div className="showing-info">
-          Showing {Math.min(endIndex, filteredEmployees.length)} of {filteredEmployees.length} entries
+          Showing {Math.min(endIndex, filteredAndSortedEmployees.length)} of {filteredAndSortedEmployees.length} entries
         </div>
         
         <div className="pagination">
           <button onClick={handlePrevious} disabled={currentPage === 1} className="dark:bg-slate-700 dark:text-blue-100 dark:hover:bg-slate-600">Previous</button>
-          <button onClick={handleNext} disabled={currentPage === totalPages || filteredEmployees.length === 0} className="dark:bg-slate-700 dark:text-blue-100 dark:hover:bg-slate-600">Next</button>
+          <button onClick={handleNext} disabled={currentPage === totalPages || filteredAndSortedEmployees.length === 0} className="dark:bg-slate-700 dark:text-blue-100 dark:hover:bg-slate-600">Next</button>
         </div>
       </div>
     </div>
