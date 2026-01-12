@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useEmployees } from '../../context/EmployeeContext'
+import EmployeeConfirmationModal from 'employee-confirmation-modal'
 import './EmployeeForm.css'
 
 function EmployeeForm() {
@@ -278,20 +279,12 @@ function EmployeeForm() {
       <button type="submit" className="submit-button dark:bg-blue-600 dark:hover:bg-blue-700 dark:text-blue-50">Save</button>
     </form>
 
-    {/* Modal de confirmation */}
-    {showModal && (
-      <div className="modal-overlay" onClick={closeModal}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-          <div className="modal-header">
-            <h2>Employé créé avec succès !</h2>
-            <button className="modal-close" onClick={closeModal}>&times;</button>
-          </div>
-          <div className="modal-body">
-            <p>L'employé <strong>{savedEmployee.firstName} {savedEmployee.lastName}</strong> a été ajouté avec succès.</p>
-          </div>
-        </div>
-      </div>
-    )}
+    {/* Modal de confirmation avec le package publié v1.0.1 */}
+    <EmployeeConfirmationModal
+      isOpen={showModal}
+      onClose={closeModal}
+      employeeName={`${savedEmployee.firstName} ${savedEmployee.lastName}`}
+    />
     </>
   )
 }
