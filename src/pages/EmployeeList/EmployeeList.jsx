@@ -1,9 +1,33 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useEmployees } from '../../context/EmployeeContext'
 import './EmployeeList.css'
 
 function EmployeeList() {
   const { employees } = useEmployees()
+  
+  // Métadonnées SEO spécifiques à la page Employee List
+  useEffect(() => {
+    // Changer le titre de la page
+    document.title = 'Liste des Employés - HRnet'
+    
+    // Ajouter ou mettre à jour la meta description
+    let metaDescription = document.querySelector('meta[name="description"]')
+    if (!metaDescription) {
+      metaDescription = document.createElement('meta')
+      metaDescription.setAttribute('name', 'description')
+      document.head.appendChild(metaDescription)
+    }
+    metaDescription.setAttribute('content', 'Consultez la liste complète des employés de votre entreprise. Recherchez, triez et naviguez facilement parmi tous les profils d\'employés avec des fonctionnalités de filtrage avancées.')
+    
+    // Nettoyage lors du démontage du composant
+    return () => {
+      document.title = 'HRnet'
+      const meta = document.querySelector('meta[name="description"]')
+      if (meta) {
+        meta.setAttribute('content', 'HRnet - Système de gestion des employés')
+      }
+    }
+  }, [])
   const [search, setSearch] = useState('')
   const [entriesPerPage, setEntriesPerPage] = useState(10)
   const [currentPage, setCurrentPage] = useState(1)
