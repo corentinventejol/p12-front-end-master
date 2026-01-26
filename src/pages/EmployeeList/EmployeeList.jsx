@@ -57,11 +57,15 @@ function EmployeeList() {
         aValue = new Date(aValue)
         bValue = new Date(bValue)
       }
-      
       // Conversion pour les nombres
-      if (sortField === 'zipCode') {
+      else if (sortField === 'zipCode') {
         aValue = parseInt(aValue) || 0
         bValue = parseInt(bValue) || 0
+      }
+      // Conversion en lowercase
+      else if (typeof aValue === 'string' && typeof bValue === 'string') {
+        aValue = aValue.toLowerCase()
+        bValue = bValue.toLowerCase()
       }
       
       // Comparaison
